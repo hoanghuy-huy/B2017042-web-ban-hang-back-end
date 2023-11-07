@@ -2,6 +2,11 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const productSChema = new Schema({
+    id:{
+        type:String,
+        unique:true,
+        required:true,
+    },
     name: {
         type: String,
         required: true
@@ -16,6 +21,25 @@ const productSChema = new Schema({
     category: {
         type:String,
         required:true,
+    },
+    note:{
+        type:String,
+    },
+    imageUrl:{
+        type:String,
+    },
+    averageRating:{
+        type:Number,
+    },
+    quantity:{
+        type:Number,
+    },
+    color:{
+        type:String,
+        required:true,
+    },
+    size:{
+        type:Number,
     }
 
 })

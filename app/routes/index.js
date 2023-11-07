@@ -4,8 +4,8 @@ const productRouter = require('./product')
 function route(app) {
    
    app.use('/',authRouter)
-   app.use('/user',userRouter)
-   app.use('/product',productRouter)
+   app.use('/api/users',userRouter)
+   app.use('/api/products',productRouter)
 }
 
 module.exports = route
