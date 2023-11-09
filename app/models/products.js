@@ -34,11 +34,11 @@ const productSChema = new Schema({
     quantity:{
         type:Number,
     },
-    color:{
+    idColor:{
         type:String,
         required:true,
     },
-    size:{
+    idSize:{
         type:Number,
     }
 

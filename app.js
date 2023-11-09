@@ -1,5 +1,5 @@
 const express = require('express')
-const app = express()
+
 const mongoose = require('mongoose')
 const cors = require('cors')
 const bodyParser = require('body-parser')
@@ -7,9 +7,13 @@ const dotenv = require('dotenv')
 const morgan = require('morgan')
 const router = require('./app/routes')
 const cookieParser = require('cookie-parser');
-const path = require('path')
+const path = require('path');
 
-app.use(express.static(path.join(__dirname,'public')))
+const app = express()
+
+
+app.use(express.static(path.join(__dirname,'assets')))
+
 app.use(cookieParser());
 app.use(cors())
 app.use(express.json())

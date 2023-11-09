@@ -7,23 +7,23 @@ const cartSChema = new Schema({
         required:true,
         unique:true,
     },
-    idCustomer:{
+    idUser:{
         type:String,
         required:true,
     },
     idProduct:{
         type:String,
         required:true,
-    },
+    },  
     quantity:{
         type:Number,
     },
-    color:{
+    idColor:{
         type:String,
         required:true,
     },
-    size:{
-        type:Number,
+    idSize:{
+        type:String,
     }
 
 })

@@ -10,8 +10,7 @@ router.delete('/',productController.deleteAllProduct)
 
 // Path 
 router.delete('/:productId',productController.deleteProduct)
-router.get('/:productId',productController.getOneProduct)
 router.put('/:productId',productController.updateProduct)
-
+router.get('/:productId',productController.getOneProduct)
 
 module.exports = router

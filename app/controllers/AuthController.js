@@ -14,67 +14,67 @@ class AuthController {
 
          // Tạo người dùng mới
          const newUser = new User({
+            id:formData.id,
             username: formData.username,
             password: hashed,
             email: formData.email,
          });
 
          const doc = await newUser.save()
-         res.status(200).json(doc)
+         return res.status(200).json(doc)
       } catch (error) {
-         res.status(500).json(error)
+         return res.status(500).json(error)
       }
    }
    // GENERATE ACCESS TOKEN 
    async generateAccessToken (user) {
       return jwt.sign({
-        id: doc._id,
+        id: doc.id,
         admin: doc.admin, 
       },
       "secretKey",
       { expiresIn: "1d" } 
       );
    }
-
-   //[POST] /login
-   async login(req, res, next) {
-      try {
-        const doc = await User.findOne({ username: req.body.username });
-        if (!doc) {
-          return res.status(404).json('Wrong username');
+   
+      async login(req, res, next) {
+        try {
+          const doc = await User.findOne({ username: req.body.username });
+          if (!doc) {
+            return res.status(404).json('Wrong username');
+          }
+          const validPassword = await bcrypt.compare(req.body.password, doc.password);
+          if (!validPassword) {
+            return res.status(404).json("Wrong password");
+          }
+          if (doc && validPassword) {
+            const accessToken = jwt.sign({
+              id: doc.id,
+              admin: doc.admin, 
+            },
+            "secretKey",// JWT_ACCESS_KEY
+            { expiresIn: "2d" } 
+            );
+            const refreshToken =  jwt.sign({
+              id: doc.id,
+              admin: doc.admin, 
+            },
+            "secretKey",
+            { expiresIn: "365d" } 
+            );
+            res.cookie("refreshToken",refreshToken,{
+              httpOnly:true,
+              secure:false,
+              path:"/",
+              sameSite:"strict"
+            })
+            const {password,...others} = doc._doc // an password
+            refreshTokenArr.push(refreshToken)
+            return res.status(200).json({ ...others,accessToken });
+          }
+        } catch (error) {
+          return res.status(500).json(error);
         }
-        const validPassword = await bcrypt.compare(req.body.password, doc.password);
-        if (!validPassword) {
-          return res.status(404).json("Wrong password");
-        }
-        if (doc && validPassword) {
-          const accessToken = jwt.sign({
-            id: doc._id,
-            admin: doc.admin, 
-          },
-          "secretKey",// JWT_ACCESS_KEY
-          { expiresIn: "1d" } 
-          );
-          const refreshToken =  jwt.sign({
-            id: doc._id,
-            admin: doc.admin, 
-          },
-          "secretKey",
-          { expiresIn: "365d" } 
-          );
-          res.cookie("refreshToken",refreshToken,{
-            httpOnly:true,
-            secure:false,
-            path:"/",
-            sameSite:"strict"
-          })
-          const {password,...others} = doc._doc // an password
-          refreshTokenArr.push(refreshToken)
-          return res.status(200).json({ ...others,accessToken });
-        }
-      } catch (error) {
-        return res.status(500).json(error);
-      }
     }
 
     async refresh(req, res, next){
@@ -89,7 +89,7 @@ class AuthController {
         refreshTokenArr = refreshTokenArr.filter((token) => token !== refreshToken)
         //create new refresh token and access token
         const newAccessToken = jwt.sign({
-          id: doc._id,
+          id: doc.id,
           admin: doc.admin, 
         },
         "secretKey",// JWT_ACCESS_KEY
@@ -97,7 +97,7 @@ class AuthController {
         );
 
         const newRefreshToken = jwt.sign({
-          id: doc._id,
+          id: doc.id,
           admin: doc.admin, 
         },
         "secretKey",
@@ -111,7 +111,7 @@ class AuthController {
           sameSite:"strict"
         })
 
-        res.status(200).json({accessToken: newAccessToken})
+        return res.status(200).json({accessToken: newAccessToken})
       })
     }
 
