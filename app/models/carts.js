@@ -9,22 +9,23 @@ const cartSChema = new Schema({
     },
     idUser:{
         type:String,
-        required:true,
     },
     idProduct:{
         type:String,
-        required:true,
     },  
-    quantity:{
+    nameProduct:{
+        type:String,
+    }, 
+    priceProduct:{
         type:Number,
-    },
-    idColor:{
+    }, 
+    imageUrlProduct:{
         type:String,
-        required:true,
     },
-    idSize:{
-        type:String,
+    averageRatingProduct:{
+        type:Number,
     }
+
 
 })
 const Cart = mongoose.model('cart',cartSChema)

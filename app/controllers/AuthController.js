@@ -8,20 +8,24 @@ class AuthController {
   // [POST] /register
    async register(req, res, next) {
       try {
-         const formData = req.body;
+         const {id, username, password, email} = req.body
          const salt = await bcrypt.genSalt(10);
-         const hashed = await bcrypt.hash(formData.password, salt);
+         const hashed = await bcrypt.hash(password, salt);
+         const emailUser = await User.findOne({email:email})
+         const user =await User.findOne({username:username})
+         if(user) return res.status(404).json({message:'Account already exists'})
+         else if(emailUser) return res.status(404).json({message:'Email already exists'})
+         else {
+          const newUser = new User({
+              id:id,
+              username: username,
+              password: hashed,
+              email: email,
+          });
+          await newUser.save()
+          return res.status(200).json({message: 'Register account successfully'})        
+        }
 
-         // Tạo người dùng mới
-         const newUser = new User({
-            id:formData.id,
-            username: formData.username,
-            password: hashed,
-            email: formData.email,
-         });
-
-         const doc = await newUser.save()
-         return res.status(200).json(doc)
       } catch (error) {
          return res.status(500).json(error)
       }
@@ -39,13 +43,14 @@ class AuthController {
    
       async login(req, res, next) {
         try {
+
           const doc = await User.findOne({ username: req.body.username });
           if (!doc) {
-            return res.status(404).json('Wrong username');
+            return res.status(404).json({message:'Wrong username'});
           }
           const validPassword = await bcrypt.compare(req.body.password, doc.password);
           if (!validPassword) {
-            return res.status(404).json("Wrong password");
+            return res.status(404).json({message:'Wrong password'});
           }
           if (doc && validPassword) {
             const accessToken = jwt.sign({

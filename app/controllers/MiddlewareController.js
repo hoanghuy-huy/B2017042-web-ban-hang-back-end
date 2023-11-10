@@ -5,8 +5,7 @@ class middlewareController {
   //verifyToken 
   verifyToken(req, res, next) {
     
-    const token = req.headers.authorization;
-    
+    const token = req.headers.token;
     if (token) {
       const accessToken = token.split(" ")[1];
       jwt.verify(accessToken, "secretKey", (err, user) => {
@@ -22,7 +21,7 @@ class middlewareController {
   }
 
   verifyTokenAndAdminAuth(req, res, next) {
-    const token = req.headers.authorization;
+    const token = req.headers.token;
     if (token) {
       const accessToken = token.split(" ")[1];
       jwt.verify(accessToken, "secretKey", (err, user) => {
