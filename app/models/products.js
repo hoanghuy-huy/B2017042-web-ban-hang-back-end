@@ -9,18 +9,15 @@ const productSChema = new Schema({
     },
     name: {
         type: String,
-        required: true
     },
     price: {
         type:Number,
-        required:true
     },
     description: {
         type:String,
     },
     category: {
         type:String,
-        required:true,
     },
     note:{
         type:String,
@@ -34,13 +31,7 @@ const productSChema = new Schema({
     quantity:{
         type:Number,
     },
-    idColor:{
-        type:String,
-        required:true,
-    },
-    idSize:{
-        type:Number,
-    }
+
 
 })
 const Product = mongoose.model('product',productSChema)

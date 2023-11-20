@@ -7,6 +7,9 @@ const customerSChema = new Schema({
         required:true,
         unique:true,
     },
+    idUser:{
+        type:String,
+    },
     name:{
         type:String,
         required:true,

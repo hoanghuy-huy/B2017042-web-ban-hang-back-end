@@ -19,7 +19,7 @@ const cartSChema = new Schema({
     priceProduct:{
         type:Number,
     }, 
-    imageUrlProduct:{
+    imageUrl:{
         type:String,
     },
     averageRatingProduct:{

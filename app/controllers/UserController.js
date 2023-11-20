@@ -2,6 +2,7 @@ const Product = require('../models/products');
 const User = require('../models/user');
 const Cart = require('../models/carts');
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require("bcrypt");
 class userController {
     
     // get all user [GET] /user
@@ -42,7 +43,7 @@ class userController {
             const id = uuidv4();
             const doc = await Product.findOne({id:productId}) 
             if(!doc) return res.status(404).json({message:'Product not found'})
-            const itemCart = new Cart({id:id,idUser:userId,idProduct:productId,priceProduct:doc.price,nameProduct:doc.name,averageRatingProduct:doc.averageRating})
+            const itemCart = new Cart({id:id,idUser:userId,idProduct:productId,priceProduct:doc.price,nameProduct:doc.name,averageRatingProduct:doc.averageRating,imageUrl:doc.imageUrl})
             await itemCart.save();
             return res.status(200).json({message:'Added item into cart',itemCart});
         } catch (error) {
@@ -65,6 +66,20 @@ class userController {
         } catch (error) {
             res.status(500).json(error)
         }
+    }
+
+    async editUser(req, res) {
+        try {
+            const {userId} = req.params
+            const user = await User.findOne({id:userId})
+            if(!user) return res.status(404).json({message: 'User not found'})
+            const update = await User.findOneAndUpdate({id:userId},req.body)  
+            await update.save()
+            return res.status(200).json({message : 'update successfully'})
+        } catch (error) {
+            return res.status(500).json({message:'error server'})
+        }
+
     }
 
 }

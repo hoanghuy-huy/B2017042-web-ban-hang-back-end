@@ -23,7 +23,7 @@ class productController {
     }
 
     
-    async addProduction(req, res, next) {
+    async addProduct(req, res, next) {
         try {
           const { id, name, price, description, category , note, imageUrl, averageRating, quantity } = req.body;
           const product = await Product.findOne({id:id})

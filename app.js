@@ -25,6 +25,8 @@ dotenv.config()
 // router
 router(app)
 
+app.use(express.static(path.join(__dirname,'public')))
+
 mongoose.connect((process.env.MONGODB_URL), {
   useNewUrlParser: true,
   useUnifiedTopology: true
