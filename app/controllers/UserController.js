@@ -58,10 +58,12 @@ class userController {
 
     }
     
-    // [Delete] user/:id
+    // [Delete] users/:id
     async deleteUser(req, res) {
         try {
-            const user = await User.findById(req.params.id)
+            const {userId} = req.params
+            const user = await User.findOneAndDelete({id:userId})
+            if(!user) return res.status(404).json({message:'Not Found'})
             res.status(200).json('delete thanh cong')
         } catch (error) {
             res.status(500).json(error)
@@ -71,7 +73,7 @@ class userController {
     async editUser(req, res) {
         try {
             const {userId} = req.params
-            const user = await User.findOne({id:userId})
+            const user = await User.findOneAndUpdate({id:userId})
             if(!user) return res.status(404).json({message: 'User not found'})
             const update = await User.findOneAndUpdate({id:userId},req.body)  
             await update.save()

@@ -45,7 +45,7 @@ class productController {
     async deleteProduct(req, res, next) {
         try {
             const { productId } = req.params
-            const product = await Product.findOne({id:productId})
+            const product = await Product.findOneAndDelete({id:productId})
             if(!product) res.json(404).json('Could not find the product')
             res.status(200).json('Delete product successfully')
         } catch (error) {
@@ -65,7 +65,7 @@ class productController {
 
     async updateProduct(req, res, next) {
         try {
-          const { id, name, price, description, category , note, imageUrl, averageRating, quantity } = req.body;
+          const { id, name, price, description, imageUrl, averageRating } = req.body;
       
           const product = await Product.findOneAndUpdate({id:id});
           if (!product) {
@@ -76,11 +76,8 @@ class productController {
                 product.name = name;
                 product.price = price;
                 product.description = description;
-                product.category = category;
-                product.note = note;
                 product.imageUrl=imageUrl;
                 product.averageRating = averageRating;
-                product.quantity = quantity
                 await product.save();
                 return res.status(200).json("update product successfully")
             }
@@ -89,11 +86,9 @@ class productController {
             product.name = name;
             product.price = price;
             product.description = description;
-            product.category = category;
-            product.note = note;
             product.imageUrl=imageUrl;
             product.averageRating = averageRating;
-            product.quantity = quantity
+
             await product.save();
             return res.status(200).json("update product successfully")
           }
